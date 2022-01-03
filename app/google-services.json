@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "639652510826",
+    "project_id": "zemo-chat",
+    "storage_bucket": "zemo-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639652510826:android:d7ecd8c986620d13ae5e13",
+        "android_client_info": {
+          "package_name": "com.example.zemochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639652510826-ls7sdeinh7q5f5i36746nbhe5avkfnf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMuLkMuRuW0p3SAdklKr_Ue7rV5_2EYFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639652510826-ls7sdeinh7q5f5i36746nbhe5avkfnf1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

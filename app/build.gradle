@@ -1,0 +1,99 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+   // id 'com.google.firebase.crashlytics'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        // added by me for solve The minCompileSdk (31)
+//        configurations.all{
+//            resolutionStrategy {force'androidx.core:core:1.6.0'}
+//        }
+        applicationId "com.example.zemochat"
+        minSdkVersion 22
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //    dataBinding {
+//        enabled = true
+//    }
+
+    buildFeatures{
+        dataBinding true
+    }
+
+//    viewBinding {
+//        enabled = true
+//    }
+    buildFeatures{
+        viewBinding true
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'com.google.firebase:firebase-database:20.0.3'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-analytics:20.0.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    ////////////////////////////////////////////
+
+    // for browser of verification
+    implementation 'androidx.browser:browser:1.2.0'
+    //lottie for animation
+    implementation 'com.airbnb.android:lottie:3.4.1'
+    // ccp for Country code picker
+    implementation 'com.hbb20:ccp:2.3.2'
+    //samehadar for modern progress par
+    implementation 'com.gmail.samehadar:iosdialog:1.0'
+    //pin view i will use it in verify number fragment
+    implementation 'com.chaos.view:pinview:1.4.3'
+   // for rounded imageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //for image cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    //for chip navigation bar (modern bottom navigation)
+    //    implementation 'com.ismaeldivita.chipnavigation:chip-navigation-bar:1.3.1'
+    implementation 'com.ismaeldivita.chipnavigation:chip-navigation-bar:1.1.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.72'
+
+    //glide for loading image from firebase to image view
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //for support multiple provider and for firebase recycler adapter
+    implementation 'com.firebaseui:firebase-ui-database:4.3.2'
+    //for firebase instance id for getting mobile id (token) i will use it in FCM for firebase notification
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+
+}
