@@ -13,6 +13,8 @@ import com.example.zemochat.R;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    // main from soliman
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
