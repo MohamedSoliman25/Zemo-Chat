@@ -30,7 +30,7 @@
             android:maxWidth="250dp"
             android:singleLine="false"
             android:textColor="@color/black"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textStyle="bold"
             />
 

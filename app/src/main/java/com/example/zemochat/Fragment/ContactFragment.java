@@ -41,7 +41,6 @@ import java.util.ArrayList;
 
 public class ContactFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    //register mohamed
     private FragmentContactBinding binding;
     private DatabaseReference databaseReference;
     private Permissions permissions;

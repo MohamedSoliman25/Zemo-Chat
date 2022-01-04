@@ -92,8 +92,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="13dp"
             android:elevation="10dp">
 
             <de.hdodenhof.circleimageview.CircleImageView

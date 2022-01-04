@@ -50,7 +50,6 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
         binding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_message, null, false);
         setContentView(binding.getRoot());
         // sharedPreferences for display myImage in Message Activity
@@ -97,13 +96,10 @@ public class MessageActivity extends AppCompatActivity {
                 }
 
                 binding.msgText.setText("");
-                util.hideKeyBoard(MessageActivity.this);
+               // util.hideKeyBoard(MessageActivity.this);
             }
         });
 
-
-        //for check online status
-        checkStatus(hisID);
 
         // updateTypingStatus in firebase for typing animation while user is typing
         binding.msgText.addTextChangedListener(new TextWatcher() {
@@ -128,6 +124,9 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        //for check online status
+        checkStatus(hisID);
+
 
 
 
@@ -146,7 +145,7 @@ public class MessageActivity extends AppCompatActivity {
                             chatID = ds.getKey();
                             Log.d(TAG, "check chat:"+chatID);
                             readMessages(chatID);
-                            Toast.makeText(MessageActivity.this, "read message", Toast.LENGTH_SHORT).show();
+                       //     Toast.makeText(MessageActivity.this, "read message", Toast.LENGTH_SHORT).show();
                             break;
                         }
                     }
@@ -308,10 +307,11 @@ public class MessageActivity extends AppCompatActivity {
                     binding.setStatus(online);
                     if (typing.equals(myID)) {
                         binding.typingStatus.setVisibility(View.VISIBLE);
+                      //  Toast.makeText(MessageActivity.this, "VISIBLE", Toast.LENGTH_SHORT).show();
                         binding.typingStatus.playAnimation();
                     } else {
                         binding.typingStatus.cancelAnimation();
-                        binding.typingStatus.setVisibility(View.GONE);
+                        binding.typingStatus.setVisibility(View.INVISIBLE);
                     }
                 }
             }

@@ -48,11 +48,11 @@
             android:layout_height="30dp"
             android:layout_above="@id/msgData"
             android:layout_marginStart="5dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             bind:lottie_autoPlay="true"
             bind:lottie_loop="true"
             bind:lottie_rawRes="@raw/typing_animation"
-            bind:lottie_repeatCount="50" />
+            bind:lottie_repeatCount="15" />
 
         <LinearLayout
             android:id="@+id/msgData"
