@@ -10,9 +10,10 @@ public interface AllConstants {
     int RECORDING_REQUEST_CODE = 3000;
     String CHANNEL_ID = "1000";
     int NOTIFICATION_ID = 100;
-
+//this is the url where we send POST request by volley lib
     String NOTIFICATION_URL = "https://fcm.googleapis.com/fcm/send";
-    String SERVER_KEY = "AAAApFehDUk:APA91bGNxMHslZsMLBQhfkIstegapDflh0czl7p_uLQD7dVnHqgq6hlWpKHjH1Eajr7vtRU0_2pjLzr_gL6ageC3twrkejOB1PzDpJdYPwPFCfvzG5CyIJ8CBjyE_yqjpJAhN9ZAMR6q";
+    //my server key (i get it from my firebase project)
+    String SERVER_KEY = "AAAAlO5CvGo:APA91bFxBrsJG42nyzi8rqFBNCFQw1q4WhgFz8_fARINGfY8RgAM5gS2kmV5LSWkQNvpQF8kXX33vic7gnqGFB4ZLnBUVcetTBfXR4PzhFyjD-pqaQ7vPGwZhRBP0pEirbn6wE-YT4l2";
     String UID = "FoRpUQwjvRZJYfEjVhm6iCbxTUg1";
 
 }

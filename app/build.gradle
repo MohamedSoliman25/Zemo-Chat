@@ -94,6 +94,10 @@ dependencies {
     //for support multiple provider and for firebase recycler adapter
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     //for firebase instance id for getting mobile id (token) i will use it in FCM for firebase notification
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    // i will use volley library to send http request
+    implementation 'com.android.volley:volley:1.1.1'
+
+
 
 }

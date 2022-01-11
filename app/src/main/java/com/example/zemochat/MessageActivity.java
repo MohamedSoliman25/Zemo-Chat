@@ -18,7 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.zemochat.Activity.UserInfo;
+import com.example.zemochat.Constants.AllConstants;
 import com.example.zemochat.Permissions.Permissions;
 import com.example.zemochat.Utils.Util;
 import com.example.zemochat.databinding.ActivityMessageBinding;
@@ -33,13 +40,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class MessageActivity extends AppCompatActivity {
     private ActivityMessageBinding binding;
-    private String hisID, hisImage, myID, chatID = null,myImage;
+    private String hisID, hisImage, myID, chatID = null,myImage,myName;
     private Util util;
     private DatabaseReference databaseReference;
     private FirebaseRecyclerAdapter<MessageModel, ViewHolder> firebaseRecyclerAdapter;
@@ -55,11 +65,12 @@ public class MessageActivity extends AppCompatActivity {
         // sharedPreferences for display myImage in Message Activity
         sharedPreferences = getSharedPreferences("UserData",MODE_PRIVATE);
         myImage = sharedPreferences.getString("userImage","");
+        myName = sharedPreferences.getString("username", "");
 
         permissions = new Permissions();
         util = new Util();
         myID = util.getUID();
-        //get extra  data from ChatFragment for display user image
+        //get extra  data from ChatFragment for display user image or get extra data from FirebaseNotificationService after user click on notification content
         if(getIntent().hasExtra("chatID")){
             chatID = getIntent().getStringExtra("chatID");
             hisID = getIntent().getStringExtra("hisID");
@@ -93,6 +104,7 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Enter Message...", Toast.LENGTH_SHORT).show();
                 } else {
                     sendMessage(message);
+                    getToken(message,hisID,hisImage,chatID);
                 }
 
                 binding.msgText.setText("");
@@ -116,6 +128,8 @@ public class MessageActivity extends AppCompatActivity {
                 }
                 else
                     updateTypingStatus(hisID);
+               // updateTypingStatus(myID);
+
             }
 
             @Override
@@ -316,6 +330,7 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(MessageActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
@@ -326,10 +341,85 @@ public class MessageActivity extends AppCompatActivity {
     // updateTypingStatus in firebase for typing animation while user is typing
     private void updateTypingStatus(String status) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myID);
+        //  DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(hisID);
         Map<String, Object> map = new HashMap<>();
         map.put("typing", status);
         databaseReference.updateChildren(map);
     }
+    // get token(device id) and other data for notification and make json object and put in it data(to-data) and pass this jsonObject(to) to sendNotification method for making http request for FCM by volley
+    private void getToken(String message, String hisID, String myImage, String chatID) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(hisID);
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String token = snapshot.child("token").getValue().toString();
+
+
+                //this is the json format that FCM used it to send data message and every time i send data message because i want to generate custom notification
+                JSONObject to = new JSONObject();
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("title", myName);
+                    data.put("message", message);
+                    data.put("hisID", myID);
+                    data.put("hisImage", myImage);
+                    data.put("chatID", chatID);
+
+
+                    to.put("to", token);
+                    to.put("data", data);
+
+                  sendNotification(to);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Toast.makeText(MessageActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    // i will use volley library to send http request (JSONObject) to FCM Notification
+    private void sendNotification(JSONObject to) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, AllConstants.NOTIFICATION_URL, to, response -> {
+            Log.d("notification", "sendNotification: " + response);
+        }, error -> {
+            Log.d("notification", "sendNotification: " + error);
+        }) {
+            // in getHeaders method i will add my project server key for Authorization and application/type for Content-Type
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<>();
+                map.put("Authorization", "key=" + AllConstants.SERVER_KEY);
+                map.put("Content-Type", "application/json");
+                return map;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        request.setRetryPolicy(new DefaultRetryPolicy(30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(request);
+    }
+
+
+
+
+
+
+
 
     // i added it
 //    @Override
