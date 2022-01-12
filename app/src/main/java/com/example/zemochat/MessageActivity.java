@@ -72,17 +72,17 @@ public class MessageActivity extends AppCompatActivity {
         myID = util.getUID();
         //get extra  data from ChatFragment for display user image or get extra data from FirebaseNotificationService after user click on notification content
         if(getIntent().hasExtra("chatID")){
-            chatID = getIntent().getStringExtra("chatID");
+          // chatID = getIntent().getStringExtra("chatID");
             hisID = getIntent().getStringExtra("hisID");
             hisImage = getIntent().getStringExtra("hisImage");
             Log.d("message", "onCreate: hisID" + hisID + "\n myID" + myID);
-            readMessages(chatID);
+           // readMessages(chatID);
         }
-       else{
+        else{
             // when i clicked on contact item ,contact adapter will send userId and userImage to Message Activity
             hisID = getIntent().getStringExtra("hisID");
             hisImage = getIntent().getStringExtra("hisImage");
-       }
+        }
 
 
 
@@ -108,7 +108,7 @@ public class MessageActivity extends AppCompatActivity {
                 }
 
                 binding.msgText.setText("");
-               // util.hideKeyBoard(MessageActivity.this);
+                // util.hideKeyBoard(MessageActivity.this);
             }
         });
 
@@ -128,7 +128,7 @@ public class MessageActivity extends AppCompatActivity {
                 }
                 else
                     updateTypingStatus(hisID);
-               // updateTypingStatus(myID);
+                // updateTypingStatus(myID);
 
             }
 
@@ -159,7 +159,7 @@ public class MessageActivity extends AppCompatActivity {
                             chatID = ds.getKey();
                             Log.d(TAG, "check chat:"+chatID);
                             readMessages(chatID);
-                       //     Toast.makeText(MessageActivity.this, "read message", Toast.LENGTH_SHORT).show();
+                            //     Toast.makeText(MessageActivity.this, "read message", Toast.LENGTH_SHORT).show();
                             break;
                         }
                     }
@@ -204,10 +204,11 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(String msg) {
         if (chatID == null) {
             createChat(msg);
-
+            Log.d(TAG, "create chat: ");
             // else (for example second message) after first message i can't generate new user chatList because it is already there
         } else {
             String date = util.currentData();
+            Log.d(TAG, "send message: ");
 
             MessageModel messageModel = new MessageModel(myID, hisID, msg, date, "text");
             databaseReference = FirebaseDatabase.getInstance().getReference("Chat").child(chatID);
@@ -245,7 +246,6 @@ public class MessageActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<MessageModel> options = new FirebaseRecyclerOptions.Builder<MessageModel>()
                 .setQuery(query, MessageModel.class).build();
         query.keepSynced(true);
-
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<MessageModel, ViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull MessageModel messageModel) {
@@ -260,6 +260,7 @@ public class MessageActivity extends AppCompatActivity {
                     viewHolder.viewDataBinding.setVariable(BR.messageImage,hisImage);
                     viewHolder.viewDataBinding.setVariable(BR.message,messageModel);
                 }
+                Log.d(TAG, "get item count : "+getItemCount());
 
 
 
@@ -288,8 +289,12 @@ public class MessageActivity extends AppCompatActivity {
                     return 1;
             }
         };
-        binding.recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this));
+        // i added this only and iam not make any commit about this
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        binding.recyclerViewMessage.setLayoutManager(linearLayoutManager);
         binding.recyclerViewMessage.setAdapter(firebaseRecyclerAdapter);
+        Log.d(TAG, "readMessages: ");
         // i modified it from false to true
         binding.recyclerViewMessage.setHasFixedSize(true);
         firebaseRecyclerAdapter.startListening();
@@ -321,7 +326,7 @@ public class MessageActivity extends AppCompatActivity {
                     binding.setStatus(online);
                     if (typing.equals(myID)) {
                         binding.typingStatus.setVisibility(View.VISIBLE);
-                      //  Toast.makeText(MessageActivity.this, "VISIBLE", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(MessageActivity.this, "VISIBLE", Toast.LENGTH_SHORT).show();
                         binding.typingStatus.playAnimation();
                     } else {
                         binding.typingStatus.cancelAnimation();
@@ -369,7 +374,7 @@ public class MessageActivity extends AppCompatActivity {
                     to.put("to", token);
                     to.put("data", data);
 
-                  sendNotification(to);
+                    sendNotification(to);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
