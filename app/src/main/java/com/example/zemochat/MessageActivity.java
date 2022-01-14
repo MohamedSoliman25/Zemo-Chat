@@ -25,6 +25,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.zemochat.Activity.UserInfo;
+import com.example.zemochat.Adapter.MessageAdapter;
 import com.example.zemochat.Constants.AllConstants;
 import com.example.zemochat.Permissions.Permissions;
 import com.example.zemochat.Utils.Util;
@@ -43,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -52,10 +54,12 @@ public class MessageActivity extends AppCompatActivity {
     private String hisID, hisImage, myID, chatID = null,myImage,myName;
     private Util util;
     private DatabaseReference databaseReference;
-    private FirebaseRecyclerAdapter<MessageModel, ViewHolder> firebaseRecyclerAdapter;
     private SharedPreferences sharedPreferences;
     private Permissions permissions;
     private static final String TAG = "MessageActivity";
+    MessageAdapter messageAdapter ;
+    ArrayList<MessageModel> messageModelArrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +88,20 @@ public class MessageActivity extends AppCompatActivity {
             hisImage = getIntent().getStringExtra("hisImage");
         }
 
-
-
         binding.setImage(hisImage);
         binding.setActivity(this);
+        messageModelArrayList = new ArrayList<>();
+        messageAdapter  = new MessageAdapter(this,messageModelArrayList,myImage,hisImage);
+        binding.recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewMessage.setAdapter(messageAdapter);
+//        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getBottom());
+        binding.recyclerViewMessage.setHasFixedSize(true);
 
 
 
-//check if user chat exist then fetch id else we will create chatList then send message
+
+
+//check if user chat exist then fetch id and read messages and we will create chatList then send message
         if (chatID == null)
             checkChat(hisID);
 
@@ -240,78 +250,36 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void readMessages(String chatID) {
-        Query query = FirebaseDatabase
-                .getInstance().getReference().child("Chat")
-                .child(chatID);
-        FirebaseRecyclerOptions<MessageModel> options = new FirebaseRecyclerOptions.Builder<MessageModel>()
-                .setQuery(query, MessageModel.class).build();
-        query.keepSynced(true);
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<MessageModel, ViewHolder>(options) {
+        FirebaseDatabase.getInstance().getReference().child("Chat").child(chatID).addValueEventListener(new ValueEventListener() {
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull MessageModel messageModel) {
-
-                // handle set mine image
-                if(getItemViewType(i) == 0){
-                    //display sender image(my image)
-                    viewHolder.viewDataBinding.setVariable(BR.messageImage,myImage);
-                    viewHolder.viewDataBinding.setVariable(BR.message,messageModel);
-                }
-                else{
-                    viewHolder.viewDataBinding.setVariable(BR.messageImage,hisImage);
-                    viewHolder.viewDataBinding.setVariable(BR.message,messageModel);
-                }
-                Log.d(TAG, "get item count : "+getItemCount());
-
-
-
-            }
-
-            @NonNull
-            @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                if (viewType==0){
-                    ViewDataBinding viewDataBinding = RightItemLayoutBinding.inflate(LayoutInflater.from(getBaseContext()),parent,false);
-                    return new ViewHolder(viewDataBinding);
-                }
-                else{
-                    ViewDataBinding viewDataBinding = LeftItemLayoutBinding.inflate(LayoutInflater.from(getBaseContext()),parent,false);
-                    return new ViewHolder(viewDataBinding);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    messageModelArrayList.clear();
+                    for (DataSnapshot dataSnapshot :snapshot.getChildren()){
+                        MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
+                        messageModelArrayList.add(messageModel);
+                        messageAdapter.notifyDataSetChanged();
+                        //for display last message in recycler view
+                        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount());
+                        binding.recyclerViewMessage.setItemViewCacheSize(binding.recyclerViewMessage.getAdapter().getItemCount());
+                        Log.d(TAG, "readMessages: ");
+                    }
+                    //Log.d(TAG, "item count :"+binding.recyclerViewMessage.getAdapter().getItemCount())
+                  //  binding.recyclerViewMessage.getLayoutManager().smoothScrollToPosition(binding.recyclerViewMessage,new RecyclerView.State(),binding.recyclerViewMessage.getAdapter().getItemCount());
                 }
             }
 
-            //getItemViewType is used to check wheather layout it sender layout or receiver layout this is the way we use multi layouts in adapter class
             @Override
-            public int getItemViewType(int position) {
-                MessageModel messageModel = getItem(position);
-                if (myID.equals(messageModel.getSender()))
-                    return 0;
-                else
-                    return 1;
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MessageActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        };
-        // i added this only and iam not make any commit about this
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
-        binding.recyclerViewMessage.setLayoutManager(linearLayoutManager);
-        binding.recyclerViewMessage.setAdapter(firebaseRecyclerAdapter);
-        Log.d(TAG, "readMessages: ");
-        // i modified it from false to true
-        binding.recyclerViewMessage.setHasFixedSize(true);
-        firebaseRecyclerAdapter.startListening();
+        });
+
+
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        //ViewDataBinding is general class of any binding layout
-        private ViewDataBinding viewDataBinding;
-
-        public ViewHolder(@NonNull ViewDataBinding viewDataBinding) {
-            super(viewDataBinding.getRoot());
-            this.viewDataBinding = viewDataBinding;
-
-        }
-    }
 
     //for check status online in toolbar in Message Activity && show typing animation while user is typing
     private void checkStatus(String hisID) {
@@ -326,7 +294,7 @@ public class MessageActivity extends AppCompatActivity {
                     binding.setStatus(online);
                     if (typing.equals(myID)) {
                         binding.typingStatus.setVisibility(View.VISIBLE);
-                        //  Toast.makeText(MessageActivity.this, "VISIBLE", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onDataChange: ");
                         binding.typingStatus.playAnimation();
                     } else {
                         binding.typingStatus.cancelAnimation();
@@ -447,6 +415,14 @@ public class MessageActivity extends AppCompatActivity {
         util.updateOnlineStatus("online");
         super.onResume();
     }
+
+//    @Override
+//    protected void onStart() {
+//        //for display always last message in recycler view
+//        messageAdapter.notifyDataSetChanged();
+//        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount());
+//        super.onStart();
+//    }
 
     @Override
     protected void onPause() {

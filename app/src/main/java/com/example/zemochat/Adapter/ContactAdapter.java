@@ -133,4 +133,7 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
             this.layoutBinding = layoutBinding;
         }
     }
+
+
+
 }
