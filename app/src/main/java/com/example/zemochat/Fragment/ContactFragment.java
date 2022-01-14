@@ -73,7 +73,7 @@ public class ContactFragment extends Fragment implements SearchView.OnQueryTextL
         binding.recyclerViewContact.setHasFixedSize(true);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         appContacts = new ArrayList<>();
-        contactAdapter = new ContactAdapter(getActivity(), appContacts);
+        contactAdapter = new ContactAdapter(getActivity());
         binding.recyclerViewContact.setAdapter(contactAdapter);
        // userPhoneNumber = firebaseAuth.getCurrentUser().getDisplayName();
         //my phone
@@ -170,11 +170,11 @@ public class ContactFragment extends Fragment implements SearchView.OnQueryTextL
                                // Log.d(TAG, "onDataChange for num : my mob : "+number+"    ,  contacts mob : "+userModel.getNumber());
 
                                 appContacts.add(registeredUser);
-                                contactAdapter.notifyDataSetChanged();
                                 break;
                             }
                         }
                     }
+                    contactAdapter.setArrayList(appContacts);
 
 
 
@@ -209,9 +209,10 @@ public class ContactFragment extends Fragment implements SearchView.OnQueryTextL
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (contactAdapter != null)
+        if (contactAdapter != null){
             Log.d(TAG, "onQueryTextChange:"+newText);
             contactAdapter.getFilter().filter(newText);
+            }
         return false;
     }
 

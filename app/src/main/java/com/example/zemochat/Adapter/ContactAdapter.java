@@ -29,17 +29,24 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Adapter.ContactAdapter.ViewHolder> implements Filterable {
 
     private Context context;
-    private ArrayList<UserModel> arrayList, filterArrayList;
+    private ArrayList<UserModel> arrayList = new ArrayList<>();
+    private ArrayList<UserModel> filterArrayList = new ArrayList<>();
     private ContactItemLayoutBinding binding;
-
     private static final String TAG = "ContactAdapter";
 
-    public ContactAdapter(Context context, ArrayList<UserModel> arrayList) {
+    public ContactAdapter(Context context) {
         this.context = context;
+//        this.arrayList = arrayList;
+//        filterArrayList = new ArrayList<>();
+
+    }
+
+    public void setArrayList(ArrayList<UserModel> arrayList) {
         this.arrayList = arrayList;
-        filterArrayList = new ArrayList<>();
+        notifyDataSetChanged();
         //add original list to filter array list by default
         filterArrayList.addAll(arrayList);
+        Log.d(TAG, "mosetArrayList: "+arrayList.get(0).getName());
     }
 
     @NonNull
@@ -94,7 +101,8 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            Log.d(TAG, "performFiltering:"+constraint);
+
+           // Log.d(TAG, "performFiltering:"+constraint);
             List<UserModel> filteredList = new ArrayList<>();
             //if user does not write anything in search , by default i display all contacts in my app by adding filterArrayList to filteredList
             if (constraint == null || constraint.length() == 0)
@@ -103,9 +111,12 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
                 // take filter (user search) and convert name of contact to lower case
                 String filter = constraint.toString().toLowerCase().trim();
                 for (UserModel userModel : filterArrayList) {
+                   // Log.d(TAG, "userModel: "+userModel.getName());
                 // check if name in the filterArrayList is contains filter(user search ), if true add user model to filteredList
-                    if (userModel.getName().toLowerCase().contains(filter))
+                    if (userModel.getName().toLowerCase().contains(filter)) {
                         filteredList.add(userModel);
+                       // Log.d(TAG, "get search : "+filteredList.get());
+                    }
                 }
             }
 
