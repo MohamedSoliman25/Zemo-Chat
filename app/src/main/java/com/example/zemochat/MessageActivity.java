@@ -91,10 +91,12 @@ public class MessageActivity extends AppCompatActivity {
         binding.setImage(hisImage);
         binding.setActivity(this);
         messageModelArrayList = new ArrayList<>();
-        messageAdapter  = new MessageAdapter(this,messageModelArrayList,myImage,hisImage);
-        binding.recyclerViewMessage.setLayoutManager(new LinearLayoutManager(this));
+        messageAdapter  = new MessageAdapter(this,myImage,hisImage);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        binding.recyclerViewMessage.setLayoutManager(linearLayoutManager);
         binding.recyclerViewMessage.setAdapter(messageAdapter);
-//        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getBottom());
+//       binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getBottom());
         binding.recyclerViewMessage.setHasFixedSize(true);
 
 
@@ -258,14 +260,19 @@ public class MessageActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot :snapshot.getChildren()){
                         MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
                         messageModelArrayList.add(messageModel);
-                        messageAdapter.notifyDataSetChanged();
+//                        messageAdapter.notifyDataSetChanged();
+
                         //for display last message in recycler view
-                        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount());
-                        binding.recyclerViewMessage.setItemViewCacheSize(binding.recyclerViewMessage.getAdapter().getItemCount());
+//                        binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount());
+//                        binding.recyclerViewMessage.setItemViewCacheSize(binding.recyclerViewMessage.getAdapter().getItemCount());
                         Log.d(TAG, "readMessages: ");
                     }
+                    messageAdapter.setMessageModelArrayList(messageModelArrayList);
+                    messageAdapter.notifyItemInserted(messageModelArrayList.size()-1);
+                     // messageAdapter.notifyDataSetChanged();
+                   binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount()-1);
+
                     //Log.d(TAG, "item count :"+binding.recyclerViewMessage.getAdapter().getItemCount())
-                  //  binding.recyclerViewMessage.getLayoutManager().smoothScrollToPosition(binding.recyclerViewMessage,new RecyclerView.State(),binding.recyclerViewMessage.getAdapter().getItemCount());
                 }
             }
 

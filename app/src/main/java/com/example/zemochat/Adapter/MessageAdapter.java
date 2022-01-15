@@ -22,15 +22,21 @@ import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
     Context context;
-    ArrayList<MessageModel> messageModelArrayList ;
+    ArrayList<MessageModel> messageModelArrayList  = new ArrayList<>();
     String myImage,hisImage;
     Util util = new Util();
 
-    public MessageAdapter(Context context, ArrayList<MessageModel> messageModelArrayList, String myImage, String hisImage) {
+    public MessageAdapter(Context context, String myImage, String hisImage) {
         this.context = context;
-        this.messageModelArrayList = messageModelArrayList;
+//        this.messageModelArrayList = messageModelArrayList;
         this.myImage = myImage;
         this.hisImage = hisImage;
+    }
+
+    public void setMessageModelArrayList(ArrayList<MessageModel> messageModelArrayList) {
+        this.messageModelArrayList = messageModelArrayList;
+        //notifyDataSetChanged();
+       // notifyItemChanged(getItemCount());
     }
 
     @NonNull
