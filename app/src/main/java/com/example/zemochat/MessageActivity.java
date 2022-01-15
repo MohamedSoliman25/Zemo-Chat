@@ -116,7 +116,7 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Enter Message...", Toast.LENGTH_SHORT).show();
                 } else {
                     sendMessage(message);
-                    getToken(message,hisID,hisImage,chatID);
+                    getToken(message,myID,myImage,chatID);
                 }
 
                 binding.msgText.setText("");
