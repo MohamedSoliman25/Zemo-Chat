@@ -268,7 +268,7 @@ public class MessageActivity extends AppCompatActivity {
                         Log.d(TAG, "readMessages: ");
                     }
                     messageAdapter.setMessageModelArrayList(messageModelArrayList);
-                    messageAdapter.notifyItemInserted(messageModelArrayList.size()-1);
+                    messageAdapter.notifyItemInserted(messageModelArrayList.size());
                      // messageAdapter.notifyDataSetChanged();
                    binding.recyclerViewMessage.smoothScrollToPosition(binding.recyclerViewMessage.getAdapter().getItemCount()-1);
 
