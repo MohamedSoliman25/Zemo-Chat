@@ -126,7 +126,6 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
         intent.putExtra("hisID", hisID);
         intent.putExtra("hisImage", hisImage);
         intent.putExtra("chatID", chatID);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Notification notification = new Notification.Builder(this, AllConstants.CHANNEL_ID)
