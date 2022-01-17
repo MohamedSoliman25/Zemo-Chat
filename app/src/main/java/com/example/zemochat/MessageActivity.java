@@ -158,6 +158,8 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
+
     private void checkChat(final String hisID) {
         databaseReference = FirebaseDatabase.getInstance().getReference("ChatList").child(myID);
         Query query = databaseReference.orderByChild("member").equalTo(hisID);
@@ -327,7 +329,7 @@ public class MessageActivity extends AppCompatActivity {
         databaseReference.updateChildren(map);
     }
     // get token(device id) and other data for notification and make json object and put in it data(to-data) and pass this jsonObject(to) to sendNotification method for making http request for FCM by volley
-    private void getToken(String message, String hisID, String myImage, String chatID) {
+    private void getToken(String message, String myID, String myImage, String chatID) {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(hisID);
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
