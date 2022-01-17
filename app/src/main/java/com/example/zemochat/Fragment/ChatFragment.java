@@ -56,8 +56,9 @@ public class ChatFragment extends Fragment {
     }
 
     private void readChat() {
+        // i use  orderByChild for ordering users according each user time and it really order it but i want make it reverse order so i will make recycler view display items in reverse order
         Query query = FirebaseDatabase.getInstance().getReference("ChatList")
-                .child(util.getUID());
+                .child(util.getUID()).orderByChild("date");
 
         FirebaseRecyclerOptions<ChatListModel> options = new FirebaseRecyclerOptions.Builder<ChatListModel>()
                 .setQuery(query, ChatListModel.class).build();
@@ -119,7 +120,10 @@ public class ChatFragment extends Fragment {
             }
         };
 
-        binding.recyclerViewChat.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        binding.recyclerViewChat.setLayoutManager(linearLayoutManager);
         // i added true instead of false
         binding.recyclerViewChat.setHasFixedSize(true);
         binding.recyclerViewChat.setAdapter(firebaseRecyclerAdapter);

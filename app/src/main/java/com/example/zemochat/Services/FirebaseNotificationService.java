@@ -103,7 +103,7 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
         //for sound of notification
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-
+//for displaying user image and i will use it for setLargeIcon
         try {
             bitmap =  Glide.with(this).asBitmap().load(hisImage).submit().get();
         } catch (ExecutionException e) {
