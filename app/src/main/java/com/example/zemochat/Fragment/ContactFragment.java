@@ -234,6 +234,8 @@ public class ContactFragment extends Fragment implements SearchView.OnQueryTextL
     @Override
     public void onPause() {
         super.onPause();
-        util.hideKeyBoard(getActivity());
+        //for hide keyboard of search friend
+                final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(),0);
     }
 }
