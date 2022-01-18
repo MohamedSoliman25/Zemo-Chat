@@ -230,4 +230,10 @@ public class ContactFragment extends Fragment implements SearchView.OnQueryTextL
 //        imm.hideSoftInputFromWindow(getView().getWindowToken(),0);
 //        Toast.makeText(getContext(), "onResume", Toast.LENGTH_SHORT).show();
 //    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        util.hideKeyBoard(getActivity());
+    }
 }
