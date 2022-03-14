@@ -10,9 +10,3 @@ A real-time chat app, allowing users to sign up by using Firebase Phone Authenti
 -Live Data
 -Navigation Chip
 -Glide
--Volley
--Lottie for aimation
--Image Cropper
--cpp for country code picker
--Samehadar for modern progress par
--Pinview
