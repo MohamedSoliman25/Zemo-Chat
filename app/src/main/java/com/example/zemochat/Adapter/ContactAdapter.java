@@ -43,9 +43,10 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
 
     public void setArrayList(ArrayList<UserModel> arrayList) {
         this.arrayList = arrayList;
-        notifyDataSetChanged();
         //add original list to filter array list by default
+        filterArrayList.clear();
         filterArrayList.addAll(arrayList);
+        notifyDataSetChanged();
         Log.d(TAG, "mosetArrayList: "+arrayList.get(0).getName());
     }
 
@@ -104,6 +105,7 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
 
            // Log.d(TAG, "performFiltering:"+constraint);
             List<UserModel> filteredList = new ArrayList<>();
+            arrayList.clear();
             //if user does not write anything in search , by default i display all contacts in my app by adding filterArrayList to filteredList
             if (constraint == null || constraint.length() == 0)
                 filteredList.addAll(filterArrayList);
