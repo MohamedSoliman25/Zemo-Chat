@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class VerifyNumber extends Fragment {
@@ -96,28 +98,69 @@ public class VerifyNumber extends Fragment {
     }
 
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if (task.isSuccessful()) {
+//
+//                        UserModel userModel = new UserModel("", "", "", firebaseAuth.getCurrentUser().getPhoneNumber(),
+//                                firebaseAuth.getUid(), "online", "false");
+//                        databaseReference.child(firebaseAuth.getUid()).setValue(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//
+//                                    getFragmentManager().beginTransaction().replace(R.id.container, new UserData()).commit();
+//                                    binding.progressLayout.setVisibility(View.GONE);
+//                                    binding.progressBar.stop();
+//
+//                                } else
+//                                    Toast.makeText(getContext(), "" + task.getException(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//
+//
+//                } else
+//                    Toast.makeText(getContext(), "" + task.getResult(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+        private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
-                        UserModel userModel = new UserModel("", "", "", firebaseAuth.getCurrentUser().getPhoneNumber(),
-                                firebaseAuth.getUid(), "online", "false");
-                        databaseReference.child(firebaseAuth.getUid()).setValue(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
+                    // i will use it for getting mobile device id (token) and i will using this token for FCM (notification)
+                    final String[] token = {""};
+                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if(task.isComplete()){
+                                token[0] = task.getResult();
+                                Log.d("AppConstants", "onComplete: new Token got: "+token[0] );
+                                UserModel userModel = new UserModel("", "", "", firebaseAuth.getCurrentUser().getPhoneNumber(),
+                                        firebaseAuth.getUid(), "online", "false",token[0]);
+                                databaseReference.child(firebaseAuth.getUid()).setValue(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
 
-                                    getFragmentManager().beginTransaction().replace(R.id.container, new UserData()).commit();
-                                    binding.progressLayout.setVisibility(View.GONE);
-                                    binding.progressBar.stop();
+                                            getFragmentManager().beginTransaction().replace(R.id.container, new UserData()).commit();
+                                            binding.progressLayout.setVisibility(View.GONE);
+                                            binding.progressBar.stop();
 
-                                } else
-                                    Toast.makeText(getContext(), "" + task.getException(), Toast.LENGTH_SHORT).show();
+                                        } else
+                                            Toast.makeText(getContext(), "" + task.getException(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
                             }
-                        });
-
+                        }
+                    });
 
                 } else
                     Toast.makeText(getContext(), "" + task.getResult(), Toast.LENGTH_SHORT).show();
@@ -125,8 +168,6 @@ public class VerifyNumber extends Fragment {
         });
     }
 
-
-//
 //    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
 //
 //

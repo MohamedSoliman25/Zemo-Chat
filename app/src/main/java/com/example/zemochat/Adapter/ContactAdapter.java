@@ -47,7 +47,7 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
         filterArrayList.clear();
         filterArrayList.addAll(arrayList);
         notifyDataSetChanged();
-        Log.d(TAG, "mosetArrayList: "+arrayList.get(0).getName());
+      //  Log.d(TAG, "mosetArrayList: "+arrayList.get(0).getName());
     }
 
     @NonNull
@@ -89,7 +89,7 @@ public class ContactAdapter extends RecyclerView.Adapter<com.example.zemochat.Ad
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return arrayList == null ? 0 : arrayList.size();
     }
 
     // when user is writing his search contact name the  onQueryTextChange is called and i called this method

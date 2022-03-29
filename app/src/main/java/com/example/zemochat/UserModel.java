@@ -11,12 +11,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserModel {
 
-    String name, status, image, number, uID, online, typing;
+    String name, status, image, number, uID, online, typing,token;
 
     public UserModel() {
     }
 
-    public UserModel(String name, String status, String image, String number, String uID, String online, String typing) {
+    public UserModel(String name, String status, String image, String number, String uID, String online, String typing,String token) {
         this.name = name;
         this.status = status;
         this.image = image;
@@ -24,6 +24,7 @@ public class UserModel {
         this.uID = uID;
         this.online = online;
         this.typing = typing;
+        this.token = token;
     }
 
 
@@ -81,6 +82,14 @@ public class UserModel {
 
     public void setuID(String uID) {
         this.uID = uID;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @BindingAdapter("imageUrl")
