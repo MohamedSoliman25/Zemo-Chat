@@ -4,20 +4,20 @@ A real-time chat app, allowing users to sign up by using Firebase Phone Authenti
 ####
 ## Tools
 
--Firebase Realtime Database
--Firebase Phone Authentication(OTP)
--Firebase Cloud Messaging(FCM)
--MVVM
--Live Data
--Data Binding
--Navigation Chip
--Glide
--Volley
--Lottie for aimation
--Image Cropper
--cpp for country code picker
--Samehadar for modern progress par
--Pinview
+- Firebase Realtime Database
+- Firebase Phone Authentication(OTP)
+- Firebase Cloud Messaging(FCM)
+- MVVM
+- Live Data
+- Data Binding
+- Navigation Chip
+- Glide
+- Volley
+- Lottie for aimation
+- Image Cropper
+- cpp for country code picker
+- Samehadar for modern progress par
+- Pinview
 
 ## Screenshots
 
