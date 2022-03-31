@@ -1,6 +1,6 @@
 # Zemo-Chat
 
-A real-time chat app, allowing users to sign up by using Firebase Phone Authentication (OTP), create and edit their profiles and chat with other users who are registered on their phone and use the app, sending message notifications by using Firebase Cloud Messaging(FCM), show other users status either online or not and time of the last message.
+A real-time chat app, allowing users to sign up by using Firebase Phone Authentication (OTP), create and edit their profiles and chat with other users who are registered on their phone and using the app, sending message notifications by using Firebase Cloud Messaging(FCM), show other users status either online or not and time of the last message.
 ####
 ## Tools
 
